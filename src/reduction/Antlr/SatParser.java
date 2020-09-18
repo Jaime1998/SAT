@@ -17,7 +17,7 @@ public class SatParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		NUMBER=1, P=2, BREAK=3, COMMENT=4, WS=5, CNF=6;
+		COMMENT=1, COMMENT_BREAK=2, P=3, CNF=4, NUMBER=5, ZERO=6, BREAK=7, WS=8;
 	public static final int
 		RULE_document = 0, RULE_commentary = 1, RULE_header = 2, RULE_clause = 3;
 	private static String[] makeRuleNames() {
@@ -29,13 +29,14 @@ public class SatParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, null, "'p'", null, null, null, "'cnf'"
+			null, null, null, "'p'", "'cnf'", null, "'0'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "NUMBER", "P", "BREAK", "COMMENT", "WS", "CNF"
+			null, "COMMENT", "COMMENT_BREAK", "P", "CNF", "NUMBER", "ZERO", "BREAK", 
+			"WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -84,13 +85,23 @@ public class SatParser extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
+	 // add members to generated UppaalParser
+	    private int numNewVariables=0;
+	    private int numNewClauses
+
+	    public int getNewVariables(){
+	        return this.numNewVariables;
+	    }
+	    public int getNewClauses(){
+	        return this.numNewClauses();
+	    }
+
 	public SatParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	public static class DocumentContext extends ParserRuleContext {
-		public TerminalNode BREAK() { return getToken(SatParser.BREAK, 0); }
 		public HeaderContext header() {
 			return getRuleContext(HeaderContext.class,0);
 		}
@@ -105,6 +116,10 @@ public class SatParser extends Parser {
 		}
 		public ClauseContext clause(int i) {
 			return getRuleContext(ClauseContext.class,i);
+		}
+		public List<TerminalNode> BREAK() { return getTokens(SatParser.BREAK); }
+		public TerminalNode BREAK(int i) {
+			return getToken(SatParser.BREAK, i);
 		}
 		public DocumentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -130,6 +145,7 @@ public class SatParser extends Parser {
 		enterRule(_localctx, 0, RULE_document);
 		int _la;
 		try {
+			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(11);
@@ -147,23 +163,41 @@ public class SatParser extends Parser {
 				_la = _input.LA(1);
 			}
 			setState(14);
-			match(BREAK);
-			setState(15);
 			header();
-			setState(17); 
+			setState(16); 
+			_errHandler.sync(this);
+			_alt = 1;
+			do {
+				switch (_alt) {
+				case 1:
+					{
+					{
+					setState(15);
+					clause();
+					}
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
+				}
+				setState(18); 
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,1,_ctx);
+			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
+			setState(23);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			do {
+			while (_la==BREAK) {
 				{
 				{
-				setState(16);
-				clause();
+				setState(20);
+				match(BREAK);
 				}
 				}
-				setState(19); 
+				setState(25);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( _la==BREAK );
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -179,6 +213,10 @@ public class SatParser extends Parser {
 
 	public static class CommentaryContext extends ParserRuleContext {
 		public TerminalNode COMMENT() { return getToken(SatParser.COMMENT, 0); }
+		public List<TerminalNode> COMMENT_BREAK() { return getTokens(SatParser.COMMENT_BREAK); }
+		public TerminalNode COMMENT_BREAK(int i) {
+			return getToken(SatParser.COMMENT_BREAK, i);
+		}
 		public CommentaryContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -201,11 +239,26 @@ public class SatParser extends Parser {
 	public final CommentaryContext commentary() throws RecognitionException {
 		CommentaryContext _localctx = new CommentaryContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_commentary);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(21);
+			setState(26);
 			match(COMMENT);
+			setState(28); 
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			do {
+				{
+				{
+				setState(27);
+				match(COMMENT_BREAK);
+				}
+				}
+				setState(30); 
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			} while ( _la==COMMENT_BREAK );
 			}
 		}
 		catch (RecognitionException re) {
@@ -251,13 +304,13 @@ public class SatParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(23);
+			setState(32);
 			match(P);
-			setState(24);
+			setState(33);
 			match(CNF);
-			setState(25);
+			setState(34);
 			match(NUMBER);
-			setState(26);
+			setState(35);
 			match(NUMBER);
 			}
 		}
@@ -273,11 +326,15 @@ public class SatParser extends Parser {
 	}
 
 	public static class ClauseContext extends ParserRuleContext {
-		public TerminalNode BREAK() { return getToken(SatParser.BREAK, 0); }
 		public List<TerminalNode> NUMBER() { return getTokens(SatParser.NUMBER); }
 		public TerminalNode NUMBER(int i) {
 			return getToken(SatParser.NUMBER, i);
 		}
+		public List<TerminalNode> BREAK() { return getTokens(SatParser.BREAK); }
+		public TerminalNode BREAK(int i) {
+			return getToken(SatParser.BREAK, i);
+		}
+		public TerminalNode ZERO() { return getToken(SatParser.ZERO, 0); }
 		public ClauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -300,17 +357,40 @@ public class SatParser extends Parser {
 	public final ClauseContext clause() throws RecognitionException {
 		ClauseContext _localctx = new ClauseContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_clause);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(28);
-			match(BREAK);
-			setState(29);
+			setState(38); 
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			do {
+				{
+				{
+				setState(37);
+				match(BREAK);
+				}
+				}
+				setState(40); 
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			} while ( _la==BREAK );
+			setState(42);
 			match(NUMBER);
-			setState(30);
+			setState(43);
 			match(NUMBER);
-			setState(31);
+			setState(44);
 			match(NUMBER);
+			setState(46);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==ZERO) {
+				{
+				setState(45);
+				match(ZERO);
+				}
+			}
+
 			}
 		}
 		catch (RecognitionException re) {
@@ -325,16 +405,20 @@ public class SatParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\b$\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\3\2\7\2\f\n\2\f\2\16\2\17\13\2\3\2\3\2\3\2\6\2\24\n"+
-		"\2\r\2\16\2\25\3\3\3\3\3\4\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\2\2"+
-		"\6\2\4\6\b\2\2\2!\2\r\3\2\2\2\4\27\3\2\2\2\6\31\3\2\2\2\b\36\3\2\2\2\n"+
-		"\f\5\4\3\2\13\n\3\2\2\2\f\17\3\2\2\2\r\13\3\2\2\2\r\16\3\2\2\2\16\20\3"+
-		"\2\2\2\17\r\3\2\2\2\20\21\7\5\2\2\21\23\5\6\4\2\22\24\5\b\5\2\23\22\3"+
-		"\2\2\2\24\25\3\2\2\2\25\23\3\2\2\2\25\26\3\2\2\2\26\3\3\2\2\2\27\30\7"+
-		"\6\2\2\30\5\3\2\2\2\31\32\7\4\2\2\32\33\7\b\2\2\33\34\7\3\2\2\34\35\7"+
-		"\3\2\2\35\7\3\2\2\2\36\37\7\5\2\2\37 \7\3\2\2 !\7\3\2\2!\"\7\3\2\2\"\t"+
-		"\3\2\2\2\4\r\25";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\n\63\4\2\t\2\4\3"+
+		"\t\3\4\4\t\4\4\5\t\5\3\2\7\2\f\n\2\f\2\16\2\17\13\2\3\2\3\2\6\2\23\n\2"+
+		"\r\2\16\2\24\3\2\7\2\30\n\2\f\2\16\2\33\13\2\3\3\3\3\6\3\37\n\3\r\3\16"+
+		"\3 \3\4\3\4\3\4\3\4\3\4\3\5\6\5)\n\5\r\5\16\5*\3\5\3\5\3\5\3\5\5\5\61"+
+		"\n\5\3\5\2\2\6\2\4\6\b\2\2\2\64\2\r\3\2\2\2\4\34\3\2\2\2\6\"\3\2\2\2\b"+
+		"(\3\2\2\2\n\f\5\4\3\2\13\n\3\2\2\2\f\17\3\2\2\2\r\13\3\2\2\2\r\16\3\2"+
+		"\2\2\16\20\3\2\2\2\17\r\3\2\2\2\20\22\5\6\4\2\21\23\5\b\5\2\22\21\3\2"+
+		"\2\2\23\24\3\2\2\2\24\22\3\2\2\2\24\25\3\2\2\2\25\31\3\2\2\2\26\30\7\t"+
+		"\2\2\27\26\3\2\2\2\30\33\3\2\2\2\31\27\3\2\2\2\31\32\3\2\2\2\32\3\3\2"+
+		"\2\2\33\31\3\2\2\2\34\36\7\3\2\2\35\37\7\4\2\2\36\35\3\2\2\2\37 \3\2\2"+
+		"\2 \36\3\2\2\2 !\3\2\2\2!\5\3\2\2\2\"#\7\5\2\2#$\7\6\2\2$%\7\7\2\2%&\7"+
+		"\7\2\2&\7\3\2\2\2\')\7\t\2\2(\'\3\2\2\2)*\3\2\2\2*(\3\2\2\2*+\3\2\2\2"+
+		"+,\3\2\2\2,-\7\7\2\2-.\7\7\2\2.\60\7\7\2\2/\61\7\b\2\2\60/\3\2\2\2\60"+
+		"\61\3\2\2\2\61\t\3\2\2\2\b\r\24\31 *\60";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
