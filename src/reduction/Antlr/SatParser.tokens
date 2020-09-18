@@ -1,0 +1,8 @@
+NUMBER=1
+P=2
+BREAK=3
+COMMENT=4
+WS=5
+CNF=6
+'p'=2
+'cnf'=6
