@@ -11,9 +11,9 @@ mode HEADER;
 CNF     :   'cnf';
 
 fragment
-DIGIT   :   [0-9];
+DIGIT   :   [1-9];
 
-NUMBER  :   ('-')? DIGIT+;
-
-BREAK   :   '\r'? '\n';
-WS      :   [ \t]+              -> skip;
+NUMBER  :   ('-')? DIGIT+ ;
+ZERO    :   '0' ;
+BREAK   :   '\r'? '\n' ;
+WS      :   [ \t]+                      -> skip ;

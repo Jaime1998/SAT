@@ -1,14 +1,14 @@
 parser grammar SatParser;
 
-@parser::members { // add members to generated UppaalParser
+@parser::members {
     private int numNewVariables=0;
-    private int numNewClauses
+    private int numNewClauses = 0;
 
     public int getNewVariables(){
         return this.numNewVariables;
     }
     public int getNewClauses(){
-        return this.numNewClauses();
+        return this.numNewClauses;
     }
 }
 
@@ -20,6 +20,6 @@ commentary  :   COMMENT COMMENT_BREAK+;
 
 header      :   'p' 'cnf' NUMBER NUMBER;
 
-clause      :   BREAK+ NUMBER NUMBER NUMBER ('0')?;
+clause      :   BREAK+ NUMBER+ ('0')?;
 
 

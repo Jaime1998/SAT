@@ -1,5 +1,4 @@
-// Generated from C:/Users/57310/Documents/Github/SAT/src/reduction/Antlr\SatLexer.g4 by ANTLR 4.8
-package reduction.Antlr;
+// Generated from C:/Users/57310/Documents/Github/SAT/out/production/SAT/reduction/Antlr\SatLexer.g4 by ANTLR 4.8
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

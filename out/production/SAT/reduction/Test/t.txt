@@ -1,7 +1,7 @@
 cjsjsjsjJHB UYYB Y BH
 c seejsiejos
-c seojseiso
+c                 keiiji             soeif sjoeif
 
 c sefsefijeisei
-p cnf 2 2
+p cnf 12321 2
 1 2 3

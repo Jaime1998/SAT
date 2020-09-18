@@ -16,4 +16,4 @@ DIGIT   :   [1-9];
 NUMBER  :   ('-')? DIGIT+ ;
 ZERO    :   '0' ;
 BREAK   :   '\r'? '\n' ;
-WS      :   [ \t]+              -> skip;
+WS      :   [ \t]+                      -> skip ;
