@@ -17,7 +17,8 @@ public class SatParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		COMMENT=1, COMMENT_BREAK=2, P=3, CNF=4, NUMBER=5, ZERO=6, BREAK=7, WS=8;
+		COMMENT=1, COMMENT_BREAK=2, WS_COMMENT=3, P=4, CNF=5, NUMBER=6, ZERO=7, 
+		BREAK=8, WS=9;
 	public static final int
 		RULE_document = 0, RULE_commentary = 1, RULE_header = 2, RULE_clause = 3;
 	private static String[] makeRuleNames() {
@@ -29,14 +30,14 @@ public class SatParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, null, null, "'p'", "'cnf'", null, "'0'"
+			null, null, null, null, "'p'", "'cnf'", null, "'0'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "COMMENT", "COMMENT_BREAK", "P", "CNF", "NUMBER", "ZERO", "BREAK", 
-			"WS"
+			null, "COMMENT", "COMMENT_BREAK", "WS_COMMENT", "P", "CNF", "NUMBER", 
+			"ZERO", "BREAK", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -431,7 +432,7 @@ public class SatParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\n;\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\13;\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\3\2\7\2\f\n\2\f\2\16\2\17\13\2\3\2\7\2\22\n\2\f\2\16"+
 		"\2\25\13\2\3\2\3\2\6\2\31\n\2\r\2\16\2\32\3\2\7\2\36\n\2\f\2\16\2!\13"+
 		"\2\3\3\3\3\6\3%\n\3\r\3\16\3&\3\4\3\4\3\4\3\4\3\4\3\5\6\5/\n\5\r\5\16"+
@@ -440,13 +441,13 @@ public class SatParser extends Parser {
 		"\2\f\17\3\2\2\2\r\13\3\2\2\2\r\16\3\2\2\2\16\23\3\2\2\2\17\r\3\2\2\2\20"+
 		"\22\5\4\3\2\21\20\3\2\2\2\22\25\3\2\2\2\23\21\3\2\2\2\23\24\3\2\2\2\24"+
 		"\26\3\2\2\2\25\23\3\2\2\2\26\30\5\6\4\2\27\31\5\b\5\2\30\27\3\2\2\2\31"+
-		"\32\3\2\2\2\32\30\3\2\2\2\32\33\3\2\2\2\33\37\3\2\2\2\34\36\7\t\2\2\35"+
+		"\32\3\2\2\2\32\30\3\2\2\2\32\33\3\2\2\2\33\37\3\2\2\2\34\36\7\n\2\2\35"+
 		"\34\3\2\2\2\36!\3\2\2\2\37\35\3\2\2\2\37 \3\2\2\2 \3\3\2\2\2!\37\3\2\2"+
 		"\2\"$\7\3\2\2#%\7\4\2\2$#\3\2\2\2%&\3\2\2\2&$\3\2\2\2&\'\3\2\2\2\'\5\3"+
-		"\2\2\2()\7\5\2\2)*\7\6\2\2*+\7\7\2\2+,\7\7\2\2,\7\3\2\2\2-/\7\t\2\2.-"+
-		"\3\2\2\2/\60\3\2\2\2\60.\3\2\2\2\60\61\3\2\2\2\61\63\3\2\2\2\62\64\7\7"+
+		"\2\2\2()\7\6\2\2)*\7\7\2\2*+\7\b\2\2+,\7\b\2\2,\7\3\2\2\2-/\7\n\2\2.-"+
+		"\3\2\2\2/\60\3\2\2\2\60.\3\2\2\2\60\61\3\2\2\2\61\63\3\2\2\2\62\64\7\b"+
 		"\2\2\63\62\3\2\2\2\64\65\3\2\2\2\65\63\3\2\2\2\65\66\3\2\2\2\668\3\2\2"+
-		"\2\679\7\b\2\28\67\3\2\2\289\3\2\2\29\t\3\2\2\2\n\r\23\32\37&\60\658";
+		"\2\679\7\t\2\28\67\3\2\2\289\3\2\2\29\t\3\2\2\2\n\r\23\32\37&\60\658";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
