@@ -3,5 +3,7 @@ c seejsiejos
 c                 keiiji             soeif sjoeif
 
 c sefsefijeisei
-p cnf 12321 2
-1 2 3
+p cnf 6 3
+1 0
+2 3 0
+4 5 6 0
