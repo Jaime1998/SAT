@@ -11,7 +11,16 @@ import static java.util.Arrays.copyOfRange;
 public class SatVisitor extends SatParserBaseVisitor <String> {
 
     private int max = 0;
-    private int xsat = 3;
+    private final int xsat;
+    private final int numNewVariables;
+    private final int numNewClauses;
+
+    public SatVisitor(int xsatIn, int numNewVariablesIn, int numNewClausesIn){
+        this.xsat = xsatIn;
+        this.numNewVariables = numNewVariablesIn;
+        this.numNewClauses = numNewClausesIn;
+    }
+
     @Override
     public String visitDocument(SatParser.DocumentContext ctx) {
         String document = "";
@@ -42,10 +51,9 @@ public class SatVisitor extends SatParserBaseVisitor <String> {
 
     @Override
     public String visitHeader(SatParser.HeaderContext ctx) {
-        String header = "p cnf ";
-        header = header.concat(ctx.NUMBER(0).getText()).concat(" ").concat(ctx.NUMBER(1).getText());
+        int oldNumVariables = Integer.parseInt(ctx.NUMBER(0).getText());
+        String header = "p cnf ".concat(Integer.toString(oldNumVariables+this.numNewVariables)).concat(" ").concat(Integer.toString(this.numNewClauses));
         this.max = Integer.parseInt(ctx.NUMBER(0).getText()) + 1;
-        this.xsat = Integer.parseInt(ctx.NUMBER(0).getText());
         return header;
     }
 
@@ -109,6 +117,7 @@ public class SatVisitor extends SatParserBaseVisitor <String> {
                 piece = copyOfRange(auxVariables, lastindex, lastindex + this.xsat - 1);
                 strpiece = String.join(" ", piece);
                 clause = clause.concat("-").concat(String.valueOf(this.max)).concat(" ").concat(strpiece).concat("\n");
+                this.max = this.max + 1;
             }
         }
         return clause;

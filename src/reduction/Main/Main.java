@@ -10,6 +10,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Scanner;
 
 public class Main {
 
@@ -28,15 +29,15 @@ public class Main {
             SatLexer lexer = new SatLexer(input);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-            SatParser parser = new SatParser(tokens);
+            //Standard input to specify X reduction
+            int xsat = new Scanner(System.in).nextInt();
 
+            //parser will save the new variables and clauses
+            SatParser parser = new SatParser(tokens, xsat);
             ParseTree tree = parser.document();
-
-            SatVisitor eval = new SatVisitor();
-
+            SatVisitor eval = new SatVisitor(xsat, parser.getNewVariables(), parser.getNewClauses());
 
             System.out.println(eval.visit(tree));
-
         }catch (IOException e){
             e.printStackTrace();
         }
