@@ -3,25 +3,29 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import reduction.Antlr.SatParser;
 import reduction.Antlr.SatParserBaseVisitor;
 import java.lang.Math;
+import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Arrays.copyOfRange;
 
 public class SatVisitor extends SatParserBaseVisitor <String> {
 
     private int max = 0;
-    private int xsat = 5;
+    private int xsat = 3;
     @Override
     public String visitDocument(SatParser.DocumentContext ctx) {
         String document = "";
+        //visit commentaries
         List<SatParser.CommentaryContext> comments = ctx.commentary();
 
         for(SatParser.CommentaryContext comment: comments){
             document = document.concat(visit(comment));
         }
 
-        document = document.concat("c this problem was reduced from n-sat to x-sat\n").concat(visit(ctx.header())).concat("\n");
+        document = document.concat("c this problem was reduced to ").concat(String.valueOf(this.xsat)).concat("-sat\n").concat(visit(ctx.header())).concat("\n");
 
         List<SatParser.ClauseContext> clauses = ctx.clause();
-
+        //visit clauses to reduce
         for (SatParser.ClauseContext clause: clauses){
             document = document.concat(visit(clause));
         }
@@ -41,6 +45,7 @@ public class SatVisitor extends SatParserBaseVisitor <String> {
         String header = "p cnf ";
         header = header.concat(ctx.NUMBER(0).getText()).concat(" ").concat(ctx.NUMBER(1).getText());
         this.max = Integer.parseInt(ctx.NUMBER(0).getText()) + 1;
+        this.xsat = Integer.parseInt(ctx.NUMBER(0).getText());
         return header;
     }
 
@@ -56,12 +61,12 @@ public class SatVisitor extends SatParserBaseVisitor <String> {
         // si el tamaño de la clausula es menor o igual al sat destino
         if (numbers.size() <= this.xsat){
             //creo 2^{x-k} clausulas
-            for (int newClauses = 0; newClauses < Math.pow(2,this.xsat - numbers.size()); newClauses+= 1){
+            for (int newClause = 0; newClause < Math.pow(2,this.xsat - numbers.size()); newClause+= 1){
                 //combinaciones de variables en negativos y positivos para cada clausula
-                String combination = Integer.toBinaryString(newClauses);
+                String combination = Integer.toBinaryString(newClause);
                 while(combination.length() < (this.xsat - numbers.size()))
                     combination = "0" + combination;
-                //preparon la concatenacion de la clausula
+                //preparando la concatenacion de la clausula
                 clause = clause.concat(auxClause);
                 //creo x-k variables
                 for (int newVariable = 0; newVariable < this.xsat - numbers.size(); newVariable+= 1){
@@ -77,13 +82,36 @@ public class SatVisitor extends SatParserBaseVisitor <String> {
             //seteo mi siguiente valor maximo como el anterior mas la cantidad de variables agregadas
             this.max = this.max + this.xsat - numbers.size();
         }else {
-            // si el tamaño de la clausula es mayor o igual al sat destino
+            // si el tamaño de la clausula es mayor al sat destino
             if (numbers.size() > this.xsat) {
-                //creo x-x+1 clausulas
-                //creo k-x variables
-                this.max = this.max + 1;
+                int lastindex = 0;
+                String[] auxVariables = {};
+                String[] piece = {};
+                String strpiece = "";
+                auxVariables = auxClause.split(" ");
+                //obtengo las substrings que van a generar las nuevas clausulas
+                // substring de la primera clausula
+                piece = copyOfRange(auxVariables, lastindex, lastindex + this.xsat - 1);
+                strpiece = String.join(" ", piece);
+                clause = clause.concat(strpiece).concat(" ").concat(String.valueOf(this.max)).concat("\n");
+                lastindex = lastindex + 2;
+                //creo k-x+1 clausulas
+                for (int newClause = 2; newClause < numbers.size() - this.xsat + 1; newClause += 1) {
+                    //clausulas intermedias, no tengo en cuenta inicial ni final
+                    piece = copyOfRange(auxVariables, lastindex, lastindex + this.xsat - 2);
+                    strpiece = String.join(" ", piece);
+                    clause = clause.concat("-").concat(String.valueOf(this.max)).concat(" ").concat(strpiece).concat(" ").concat(String.valueOf(this.max + 1));
+                    this.max = this.max + 1;
+                    lastindex = lastindex + 1;
+                    clause = clause.concat("\n");
+                }
+                //substring de la ultima clausula
+                piece = copyOfRange(auxVariables, lastindex, lastindex + this.xsat - 1);
+                strpiece = String.join(" ", piece);
+                clause = clause.concat("-").concat(String.valueOf(this.max)).concat(" ").concat(strpiece).concat("\n");
             }
         }
         return clause;
     }
 }
+
